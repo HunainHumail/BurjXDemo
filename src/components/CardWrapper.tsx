@@ -5,18 +5,15 @@ import { colors } from '../themes/theme';
 import { moderateScale } from 'react-native-size-matters';
 
 const CardWrapper = ({ children, width, backgroundColor = '#2B2B2B' }) => {
-  // Calculate height based on the original aspect ratio (191/180)
   const height = (moderateScale(191) / moderateScale(180)) * moderateScale(width) - moderateScale(20);
     
   return (
     <View style={{ width, height, position: 'relative' }}>
-      {/* SVG Background */}
       <Svg
         width={width}
         height={height}
         style={{ position: 'absolute', top: 0, left: 0 }}
       >
-        {/* Filled rectangle with dynamic background color */}
         <Rect
           width={width}
           height={height}
@@ -24,7 +21,6 @@ const CardWrapper = ({ children, width, backgroundColor = '#2B2B2B' }) => {
           fill={backgroundColor}
           fillOpacity={0.3}
         />
-        {/* Stroke rectangle with gradient */}
         <Rect
           x={0.25}
           y={0.25}
@@ -50,8 +46,6 @@ const CardWrapper = ({ children, width, backgroundColor = '#2B2B2B' }) => {
           </LinearGradient>
         </Defs>
       </Svg>
-
-      {/* Content Container */}
       <View
         style={{
           width,
@@ -59,9 +53,6 @@ const CardWrapper = ({ children, width, backgroundColor = '#2B2B2B' }) => {
           padding: 20,
           borderRadius: 20,
           justifyContent: 'space-between',
-        // //   position: 'absolute',
-        //   top: 0,
-        //   left: 0,
           backgroundColor: colors.card
         }}
       >

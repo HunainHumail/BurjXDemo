@@ -19,7 +19,7 @@ const CategoryTab = () => {
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingHorizontal: 10 }}
-      style={{ backgroundColor: colors.background }} // <-- add this line
+      style={{ backgroundColor: colors.background }}
     />
   );
 };

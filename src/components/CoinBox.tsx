@@ -16,7 +16,7 @@ type Props = {
 const CoinBox: React.FC<Props> = ({ coin }) => {
   const { colors, fonts } = useTheme();
   const cardWidth = moderateScale(180);
-  console.log('colors.card:', colors.card); // Log the value
+  console.log('colors.card:', colors.card);
   return (
     <Pressable
       onPress={() =>

@@ -1,6 +1,5 @@
 import { Platform } from "react-native";
 
-// themes/theme.ts
 export const colors = {
   primary: "#black",
   secondary: "#CDFF00",

@@ -31,7 +31,6 @@ const MarketScreen = () => {
     filteredCoins,
     searchQuery
   } = useMarketStore();
-  // track whether first load has happened
   const firstLoad = useRef(true);
   const loadingRef = useRef(loading);
 
@@ -49,22 +48,19 @@ const MarketScreen = () => {
     });
   }, [loading]);
 
-  // Initial load
   useEffect(() => {
     if (firstLoad.current) {
       fetchAllCoins().then(() => firstLoad.current = false);
     }
   }, []);
 
-  // Optimized scroll handler
   const handleEndReached = useCallback(() => {
     if (!loadingRef.current && hasMore) {
       fetchAllCoins(true, true);
     }
   }, [hasMore]);
 
-  // Add loading indicator
-  // show loader only on first load
+
   if (loading && firstLoad.current) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
@@ -72,7 +68,6 @@ const MarketScreen = () => {
       </View>
     );
   }
-  // Add error handling
   if (error) {
     return (
       <View style={styles.centerContainer}>
@@ -86,17 +81,13 @@ const MarketScreen = () => {
       <View style={{ height: verticalScale(220), backgroundColor: colors.background }}>
 
         <TopTabs.Navigator
-          // 1. Tab bar background
           screenOptions={{
             tabBarScrollEnabled: true,
             swipeEnabled: false,
             tabBarStyle: { backgroundColor: colors.background },
-            // 2. The little indicator under the active tab
             tabBarIndicatorStyle: { backgroundColor: colors.green },
-            // 3. Text color of active/inactive tabs
             tabBarActiveTintColor: colors.text,
             tabBarInactiveTintColor: colors.textSecondary,
-            // 4. Make the scene (i.e. each tab's content) also use your bg
             sceneContainerStyle: { backgroundColor: colors.background },
             sceneStyle: { marginTop: 10 },
             tabBarLabelStyle: { fontFamily: fonts.regular, fontSize: 20 }
@@ -132,7 +123,6 @@ const MarketScreen = () => {
               onChangeText={setSearchQuery}
               placeholderTextColor={colors.textSecondary}
             />
-            {/* right‐aligned icon */}
             <SearchIcon
               width={moderateScale(20)}
               height={moderateScale(20)}
@@ -141,7 +131,7 @@ const MarketScreen = () => {
         </View>
         <LegendList
           style={styles.allCoinsListView}
-          data={filteredCoins}  // Changed from displayedCoins
+          data={filteredCoins} 
           renderItem={({ item }) => <CoinListItem coin={item} />}
           keyExtractor={(item) => item.id}
           estimatedItemSize={100}

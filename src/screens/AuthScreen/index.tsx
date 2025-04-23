@@ -21,9 +21,7 @@ const AuthScreen: React.FC = () => {
     useEffect(() => {
         checkBiometricAvailability();
     }, [checkBiometricAvailability]);
-    // :contentReference[oaicite:9]{index=9}
 
-    // Sends user to Settings if biometrics not set up
     const setupBiometrics = () => {
         Alert.alert(
             'Biometric Not Configured',
@@ -45,7 +43,6 @@ const AuthScreen: React.FC = () => {
         );
     };
 
-    // Invokes native biometric prompt
     const handleAuthorize = async () => {
         const success = await authenticate(
             'Login to CryptoApp',
@@ -57,12 +54,10 @@ const AuthScreen: React.FC = () => {
         }
     };
 
-    // If already logged in, show secret content
     if (isAuthenticated) {
         NavigationService.reset('Market')
     }
 
-    // Main UI
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Use Biometric to log in?</Text>
@@ -71,7 +66,6 @@ const AuthScreen: React.FC = () => {
             ><Image source={BiometricLogo} style={styles.image} /></TouchableOpacity>
             {error && <Text style={styles.errorText}>{error}</Text>}
 
-            {/* Show “Authorize” if available; else “Set Up” */}
             <AppButton
                 text={biometricAvailable ? 'Authorize' : 'Set Up'}
                 onPress={biometricAvailable ? handleAuthorize : setupBiometrics}

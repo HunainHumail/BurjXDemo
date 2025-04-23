@@ -1,4 +1,3 @@
-// src/stores/marketStore.ts
 import { create } from 'zustand';
 
 interface Coin {
@@ -62,13 +61,10 @@ export const useMarketStore = create<MarketState>((set, get) => ({
             if (!res.ok) throw new Error('Failed to fetch');
             const json = await res.json();
             const newCoins: Coin[] = json.data || [];
-
-            // Merge or replace coins
             const mergedCoins = loadMore
                 ? [...state.allCoins, ...newCoins]
                 : newCoins;
 
-            // Calculate lists
             const calculateList = (sortFn: (a: Coin, b: Coin) => number) =>
                 mergedCoins.slice().sort(sortFn).slice(0, 20);
 
@@ -89,10 +85,6 @@ export const useMarketStore = create<MarketState>((set, get) => ({
         }
     },
 
-
-
-
-    // Simplified loadMore
     loadMore: () => {
         const { hasMore, loading } = get();
         hasMore && !loading && get().fetchAllCoins(true, true);
@@ -114,11 +106,6 @@ export const useMarketStore = create<MarketState>((set, get) => ({
             filteredCoins: filtered
         });
     },
-
-
-
-
-    // placeholder arrays; will be updated by the subscription below
     featured: [],
     topGainers: [],
     topLosers: [],

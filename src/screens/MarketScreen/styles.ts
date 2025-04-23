@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 
     allCoinsUnderline: {
         width: '90%',
-        height: 2,                // thickness
+        height: 2,                
         backgroundColor: colors.green,
         borderRadius: 1,
         alignSelf: 'center'
@@ -50,17 +50,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'space-between', // optional
+        justifyContent: 'space-between', 
         paddingHorizontal: moderateScale(24),
-        gap: moderateScale(12), // optional spacing between the two
+        gap: moderateScale(12), 
     },
 
     allCoinsWrapper: {
-        flex: 1, // 50%
+        flex: 1, 
     },
 
     searchContainer: {
-        flex: 1, // 50%
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: colors.card,

@@ -6,7 +6,7 @@ import { verticalScale } from "react-native-size-matters";
 interface AppButtonProps {
   text: string;
   onPress?: () => void;
-  style?: ViewStyle; // Optional for external styling
+  style?: ViewStyle; 
 }
 
 const AppButton: React.FC<AppButtonProps> = ({ text, onPress, style }) => {

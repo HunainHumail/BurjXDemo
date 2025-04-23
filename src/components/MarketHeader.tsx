@@ -14,8 +14,6 @@ const MarketHeader = () => {
     const { setSearchQuery } = useMarketStore();
     const [searchText, setSearchText] = useState("");
     const searchFocused = useSharedValue(false);
-
-    // Animated styles
     const containerAnimatedStyle = useAnimatedStyle(() => ({
         flex: searchFocused.value 
             ? withTiming(1, { duration: 300 })
