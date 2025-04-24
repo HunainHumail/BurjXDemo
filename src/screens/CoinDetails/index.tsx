@@ -26,6 +26,7 @@ import BackIcon from '../../assets/icons/icon-back.svg'
 import NavigationService from '../../utils/NavigationService';
 import PercentageChangeBadge from '../../components/PercentageChangeBadge';
 import ExpandIcon from '../../assets/icons/expand-icon.svg'
+import { formatCurrency, formatCurrentPrice } from '../../utils/helpers';
 
 const { width: screenWidth } = Dimensions.get('window');
 const timeframes = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
@@ -34,23 +35,30 @@ const CANDLE_VISUAL_WIDTH = moderateScale(10);
 const Y_AXIS_WIDTH = moderateScale(50);
 
 
-const formatCurrency = (value) => {
-    if (typeof value !== 'number' || isNaN(value)) return '$0.00';
-    if (value >= 1000) {
-        const thousands = (value / 1000).toFixed(0);
-        return `$${thousands}K`;
-    }
-    return `$${value.toFixed(2)}`;
-};
+// const formatCurrency = (value) => {
+//     if (typeof value !== 'number' || isNaN(value)) return '$0.00';
+//     if (value >= 1000) {
+//         const thousands = (value / 1000).toFixed(0);
+//         return `$${thousands}K`;
+//     }
+//     return `$${value.toFixed(2)}`;
+// };
+// const formatCurrentPrice = (value) => {
+//     if (typeof value !== 'number' || isNaN(value)) return '$0';
 
-const formatCurrentPrice = (value) => {
-    if (typeof value !== 'number' || isNaN(value)) return '$0';
-
-    return '$' + value.toLocaleString('en-US', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 3,
-    });
-};
+//     if (value >= 1) {
+//         return '$' + value.toLocaleString('en-US', {
+//             minimumFractionDigits: 0,
+//             maximumFractionDigits: 3,
+//         });
+//     } else if (value >= 0.0001) {
+//         return '$' + value.toFixed(4);
+//     } else {
+//         // Dynamically show decimals till we hit non-zero
+//         const str = value.toPrecision(8); // Precision shows meaningful digits
+//         return '$' + parseFloat(str).toString();
+//     }
+// };
 
 
 const CoinDetails = ({ route }) => {
@@ -374,10 +382,13 @@ const styles = StyleSheet.create({
     yAxisBadge: {
         position: 'absolute',
         right: moderateScale(10),
-        paddingVertical: moderateScale(4),
-        paddingHorizontal: moderateScale(8),
+        paddingHorizontal: moderateScale(5),
         borderRadius: moderateScale(4),
         zIndex: 10,
+        width: moderateScale(70),
+        paddingVertical: verticalScale(4),
+        justifyContent:'center',
+        alignItems: 'center',
         // Add shadow for visibility
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
