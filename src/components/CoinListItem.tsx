@@ -8,6 +8,7 @@ import SparklineChart from './SparklineChart';
 import PercentageChangeBadge from './PercentageChangeBadge';
 import { colors, fonts } from '../themes/theme';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { formatCurrentPrice } from '../utils/helpers';
 
 const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
   const { colors, fonts } = useTheme();
@@ -27,7 +28,7 @@ const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
         />
         
         <Text style={[styles.priceText, { color: colors.text }]}>
-          ${coin.currentPrice.toLocaleString()}
+          {formatCurrentPrice(coin.currentPrice)}
         </Text>
       </View>
       

@@ -9,6 +9,7 @@ import SparklineChart from './SparklineChart';
 import PercentageChangeBadge from './PercentageChangeBadge';
 import CardWrapper from './CardWrapper';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { formatCurrency, formatCurrentPrice } from '../utils/helpers';
 
 type Props = {
   coin: Coin;
@@ -40,7 +41,7 @@ const CoinBox: React.FC<Props> = ({ coin }) => {
               { fontFamily: fonts.regular, color: colors.text },
             ]}
           >
-            ${coin.currentPrice.toLocaleString()}
+            {formatCurrency(coin.currentPrice)}
           </Text>
           <PercentageChangeBadge changePercent={coin.priceChangePercentage24h} />
         </View>
