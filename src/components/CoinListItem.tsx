@@ -1,22 +1,17 @@
 import React from 'react';
 import { Pressable, View, Text, StyleSheet } from 'react-native';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
+import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import { useTheme } from '../themes/useTheme';
 import NavigationService from '../utils/NavigationService';
-import Card from '../assets/images/card.svg';
-
 import CoinView, { Coin } from './CoinView';
 import SparklineChart from './SparklineChart';
 import PercentageChangeBadge from './PercentageChangeBadge';
-import { colors } from '../themes/theme';
+import { colors, fonts } from '../themes/theme';
+import { RFValue } from 'react-native-responsive-fontsize';
 
-type Props = {
-  coin: Coin;
-};
-
-
-const CoinListItem: React.FC<Props> = ({ coin }) => {
+const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
   const { colors, fonts } = useTheme();
+  
   return (
     <Pressable
       onPress={() =>
@@ -24,34 +19,31 @@ const CoinListItem: React.FC<Props> = ({ coin }) => {
       }
       style={styles.wrapper}
     >
-
       <View style={styles.leftView}>
         <CoinView
           image={coin.image}
           symbol={coin.symbol}
           name={coin.name}
         />
-
-
-        <Text
-          style={[
-            styles.text,
-            { fontFamily: fonts.regular, color: colors.text },
-          ]}
-        >
+        
+        <Text style={[styles.priceText, { color: colors.text }]}>
           ${coin.currentPrice.toLocaleString()}
         </Text>
       </View>
+      
       <View style={styles.rightView}>
-        <PercentageChangeBadge changePercent={coin.priceChangePercentage24h} />
+        <PercentageChangeBadge 
+          changePercent={coin.priceChangePercentage24h}
+        />
         <View style={styles.chartContainer}>
           <SparklineChart
             data={coin.sparkline}
             changePercent={coin.priceChangePercentage24h}
+            width={moderateScale(100)}
+            height={verticalScale(40)}
           />
         </View>
       </View>
-
     </Pressable>
   );
 };
@@ -60,32 +52,31 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     width: '90%',
-    height: verticalScale(100),
     backgroundColor: colors.card,
-    padding: moderateScale(15),
+    padding: moderateScale(12),
     justifyContent: 'space-between',
-    borderRadius: moderateScale(12),
+    borderRadius: moderateScale(10),
+    marginVertical: verticalScale(4),
     alignSelf: 'center',
-    marginVertical: 2
-  },
-  text: {
-    fontSize: moderateScale(15),
-  },
-  chartContainer: {
-    width: '100%',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
   },
   leftView: {
-    justifyContent: 'space-between'
+    flex: 1,
+    justifyContent: 'space-between',
+    marginRight: moderateScale(10),
   },
   rightView: {
     justifyContent: 'space-between',
-    alignItems: 'flex-end'
-  }
+    alignItems: 'flex-end',
+  },
+  chartContainer: {
+    width: moderateScale(100),
+    marginTop: verticalScale(20)
+  },
+  priceText: {
+    fontFamily: fonts.regular,
+    fontSize: RFValue(12),
+    includeFontPadding: false,
+  },
 });
 
 export default CoinListItem;

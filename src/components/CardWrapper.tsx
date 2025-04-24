@@ -1,19 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
 import Svg, { Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { colors } from '../themes/theme';
-import { moderateScale } from 'react-native-size-matters';
 
 const CardWrapper = ({ children, width, backgroundColor = '#2B2B2B' }) => {
-  const height = (moderateScale(191) / moderateScale(180)) * moderateScale(width) - moderateScale(20);
-    
+  const aspectRatio = 1;
+  const height = width * aspectRatio;
+
   return (
     <View style={{ width, height, position: 'relative' }}>
-      <Svg
-        width={width}
-        height={height}
-        style={{ position: 'absolute', top: 0, left: 0 }}
-      >
+      <Svg width={width} height={height} style={{ position: 'absolute' }}>
         <Rect
           width={width}
           height={height}
@@ -34,10 +31,10 @@ const CardWrapper = ({ children, width, backgroundColor = '#2B2B2B' }) => {
         <Defs>
           <LinearGradient
             id="paint0_linear"
-            x1={(16.3636 / 180) * width}
+            x1={width * (16.3636 / 180)}
             y1={0}
-            x2={(120.994 / 180) * width}
-            y2={(170.184 / 191) * height}
+            x2={width * (120.994 / 180)}
+            y2={height * (170.184 / 191)}
             gradientUnits="userSpaceOnUse"
           >
             <Stop stopColor="white" />
@@ -50,10 +47,10 @@ const CardWrapper = ({ children, width, backgroundColor = '#2B2B2B' }) => {
         style={{
           width,
           height,
-          padding: 20,
+          padding: moderateScale(12),
           borderRadius: 20,
           justifyContent: 'space-between',
-          backgroundColor: colors.card
+          backgroundColor: colors.card,
         }}
       >
         {children}

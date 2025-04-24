@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import { colors, fonts } from "../../themes/theme";
 import { moderateScale, verticalScale } from "react-native-size-matters";
+import { RFValue } from "react-native-responsive-fontsize";
 
 const styles = StyleSheet.create({
     coinItem: {
@@ -11,10 +12,10 @@ const styles = StyleSheet.create({
     coinImage: {
         width: 30,
         height: 30,
-        marginBottom: 5,
+        marginBottom: verticalScale(5),
     },
     chart: {
-        marginTop: 5,
+        marginTop: verticalScale(5),
     },
     centerContainer: {
         flex: 1,
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     allCoins: {
         color: colors.text,
         fontFamily: fonts.regular,
-        fontSize: moderateScale(20),
+        fontSize: RFValue(18),
         paddingBottom: moderateScale(4), 
         textAlign: 'center'
     },
@@ -44,13 +45,12 @@ const styles = StyleSheet.create({
         color: colors.text,
         padding: 0,
         marginRight: moderateScale(8),
-        fontSize: moderateScale(20),
+        fontSize:RFValue(18),
     },
     coinListingHeader: {
         flexDirection: 'row',
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'space-between', 
         paddingHorizontal: moderateScale(24),
         gap: moderateScale(12), 
     },

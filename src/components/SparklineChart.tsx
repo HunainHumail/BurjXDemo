@@ -24,8 +24,8 @@ const SparklineChart: React.FC<Props> = ({ data, changePercent }) => {
 
   return (
     <VictoryChart
-      width={moderateScale(132)}
-      height={50}
+      width={moderateScale(100)}
+      height={moderateScale(37)}
       padding={0}
       domain={{ y: [minY, maxY] }}
     >

@@ -15,6 +15,7 @@ import { moderateScale, verticalScale } from "react-native-size-matters";
 import CoinListItem from "../../components/CoinListItem";
 import styles from "./styles";
 import SearchIcon from '../../assets/icons/search.svg';
+import { RFValue } from "react-native-responsive-fontsize";
 
 
 const TopTabs = createMaterialTopTabNavigator();
@@ -78,9 +79,10 @@ const MarketScreen = () => {
   }
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ height: verticalScale(220), backgroundColor: colors.background }}>
 
+      <View style={{ height: '38%' }}>
         <TopTabs.Navigator
+          style={{ backgroundColor: 'red' }}
           screenOptions={{
             tabBarScrollEnabled: true,
             swipeEnabled: false,
@@ -89,8 +91,8 @@ const MarketScreen = () => {
             tabBarActiveTintColor: colors.text,
             tabBarInactiveTintColor: colors.textSecondary,
             sceneContainerStyle: { backgroundColor: colors.background },
-            sceneStyle: { marginTop: 10 },
-            tabBarLabelStyle: { fontFamily: fonts.regular, fontSize: moderateScale(16) }
+            // sceneStyle: { marginTop: verticalScale(10) },
+            tabBarLabelStyle: { fontFamily: fonts.regular, fontSize: RFValue(14) }
           }}
         >
           <TopTabs.Screen
@@ -129,18 +131,42 @@ const MarketScreen = () => {
             />
           </View>
         </View>
-        <LegendList
+        <FlatList
+          data={filteredCoins}
+          renderItem={({ item }) => <CoinListItem coin={item} />}
+          keyExtractor={(item) => item.id}
+          initialNumToRender={10}
+          maxToRenderPerBatch={5}
+          windowSize={150}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.allCoinsListView}
+          ListFooterComponent={() =>
+            hasMore ? (
+              <ActivityIndicator style={{ padding: 10 }} color={colors.green} />
+            ) : (
+              <Text style={{ textAlign: 'center', padding: 10 }}>
+                No more coins to show
+              </Text>
+            )
+          }
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.3}
+          extraData={searchQuery} // Re-render when search query changes
+          keyboardShouldPersistTaps="handled"
+          removeClippedSubviews={true}
+        />
+        {/* <LegendList
           style={styles.allCoinsListView}
-          data={filteredCoins} 
+          data={filteredCoins}
           renderItem={({ item }) => <CoinListItem coin={item} />}
           keyExtractor={(item) => item.id}
           estimatedItemSize={100}
           showsVerticalScrollIndicator={false}
           key={`list-${searchQuery}`}
-          maintainVisibleContentPosition={{
-            minIndexForVisible: 1,
-            autoscrollToTopThreshold: 30,
-          }}
+          // maintainVisibleContentPosition={{
+          //   minIndexForVisible: 1,
+          //   autoscrollToTopThreshold: 30,
+          // }}
           ListFooterComponent={() =>
             hasMore
               ? <ActivityIndicator style={{ padding: 10 }} color={colors.green} />
@@ -150,7 +176,7 @@ const MarketScreen = () => {
           }
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.3}
-        />
+        /> */}
       </View>
     </View>
   );

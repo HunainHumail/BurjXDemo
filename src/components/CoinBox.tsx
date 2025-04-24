@@ -8,6 +8,7 @@ import CoinView, { Coin } from './CoinView';
 import SparklineChart from './SparklineChart';
 import PercentageChangeBadge from './PercentageChangeBadge';
 import CardWrapper from './CardWrapper';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 type Props = {
   coin: Coin;
@@ -15,7 +16,7 @@ type Props = {
 
 const CoinBox: React.FC<Props> = ({ coin }) => {
   const { colors, fonts } = useTheme();
-  const cardWidth = moderateScale(180);
+  const cardWidth = moderateScale(160);
   console.log('colors.card:', colors.card);
   return (
     <Pressable
@@ -36,7 +37,7 @@ const CoinBox: React.FC<Props> = ({ coin }) => {
           <Text
             style={[
               styles.text,
-              { fontFamily: fonts.regular, color: colors.text, fontSize: moderateScale(16) },
+              { fontFamily: fonts.regular, color: colors.text },
             ]}
           >
             ${coin.currentPrice.toLocaleString()}
@@ -51,18 +52,22 @@ const CoinBox: React.FC<Props> = ({ coin }) => {
 const styles = StyleSheet.create({
   wrapper: {
     margin: 8,
+    justifyContent: 'center'
   },
   text: {
-    fontSize: 14,
+    fontSize: RFValue(14),
   },
   chartContainer: {
     width: '100%',
+    height: moderateScale(80), // Fixed height for consistency
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',
+    // marginTop: 'auto', // Push footer to bottom
   },
 });
 

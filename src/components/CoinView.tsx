@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { useTheme } from '../themes/useTheme';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export type Coin = {
     productId: number;
@@ -52,10 +53,10 @@ const styles = StyleSheet.create({
         marginLeft: moderateScale(20),
     },
     text: {
-        fontSize: moderateScale(16),
+        fontSize: RFValue(14),
     },
     subtext: {
-        fontSize: moderateScale(11),
+        fontSize: RFValue(9),
     }
 });
 
