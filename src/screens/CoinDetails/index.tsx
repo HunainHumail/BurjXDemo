@@ -26,7 +26,8 @@ import BackIcon from '../../assets/icons/icon-back.svg'
 import NavigationService from '../../utils/NavigationService';
 import PercentageChangeBadge from '../../components/PercentageChangeBadge';
 import ExpandIcon from '../../assets/icons/expand-icon.svg'
-import { formatCurrency, formatCurrentPrice } from '../../utils/helpers';
+import { formatCurrency, formatCurrentPrice, formatLargeNumber, formatVolume } from '../../utils/helpers';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const { width: screenWidth } = Dimensions.get('window');
 const timeframes = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
@@ -35,39 +36,23 @@ const CANDLE_VISUAL_WIDTH = moderateScale(10);
 const Y_AXIS_WIDTH = moderateScale(50);
 
 
-// const formatCurrency = (value) => {
-//     if (typeof value !== 'number' || isNaN(value)) return '$0.00';
-//     if (value >= 1000) {
-//         const thousands = (value / 1000).toFixed(0);
-//         return `$${thousands}K`;
-//     }
-//     return `$${value.toFixed(2)}`;
-// };
-// const formatCurrentPrice = (value) => {
-//     if (typeof value !== 'number' || isNaN(value)) return '$0';
-
-//     if (value >= 1) {
-//         return '$' + value.toLocaleString('en-US', {
-//             minimumFractionDigits: 0,
-//             maximumFractionDigits: 3,
-//         });
-//     } else if (value >= 0.0001) {
-//         return '$' + value.toFixed(4);
-//     } else {
-//         // Dynamically show decimals till we hit non-zero
-//         const str = value.toPrecision(8); // Precision shows meaningful digits
-//         return '$' + parseFloat(str).toString();
-//     }
-// };
-
-
 const CoinDetails = ({ route }) => {
     const { colors, fonts } = useTheme();
-    const { productId, coinImage, coinName, coinSymbol, priceChangePercentage24h, currentPrice } = route.params;
-    const [candleData, setCandleData] = useState([]);
+    const {
+        productId,
+        coinImage,
+        coinName,
+        coinSymbol,
+        priceChangePercentage24h,
+        currentPrice,
+        marketCap,
+        tradingVolume
+    } = route.params; const [candleData, setCandleData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [selectedTimeframe, setSelectedTimeframe] = useState('30D');
+    const [isCandlestick, setIsCandlestick] = useState(true); // Add this state
+
     const scrollViewRef = useRef();
     const isFirstLoad = useRef(true);
 
@@ -160,9 +145,31 @@ const CoinDetails = ({ route }) => {
                         <Text style={styles.headerText}>{coinName} ({coinSymbol.toUpperCase()})</Text>
                     </View>
                     <>
-                        <Text style={styles.currentPrice}>{formatCurrentPrice(currentPrice)}</Text>
-                        <View style={{ marginTop: 4 }} />
-                        <PercentageChangeBadge changePercent={priceChangePercentage24h} />
+                        <View style={styles.dataContainer}>
+                            {/* Left Side - Price and Percentage */}
+                            <View style={styles.priceContainer}>
+                                <Text style={styles.currentPrice}>{formatCurrentPrice(currentPrice)}</Text>
+                                <PercentageChangeBadge changePercent={priceChangePercentage24h} />
+                            </View>
+
+                            {/* Right Side - Stats */}
+                            <View style={styles.statsContainer}>
+                                <View style={styles.statItem}>
+                                    <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Market Cap</Text>
+                                    <Text style={[styles.statValue, { color: colors.text }]}>
+                                        {formatLargeNumber(marketCap)}
+                                    </Text>
+                                </View>
+
+                                <View style={styles.statItem}>
+                                    <Text style={[styles.statLabel, { color: colors.textSecondary }]}>24h Volume</Text>
+                                    <Text style={[styles.statValue, { color: colors.text }]}>
+                                        {formatVolume(tradingVolume)}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+
                         <View style={styles.chartContainer}>
                             <ScrollView
                                 ref={scrollViewRef}
@@ -198,29 +205,40 @@ const CoinDetails = ({ route }) => {
                                             month: 'short'
                                         })}
                                     />
-                                    <VictoryCandlestick
-                                        data={candleData}
-
-                                        // --- only this controls bar vs gap now ---
-                                        candleRatio={0.6}           // 50% candle, 50% gap
-
-                                        wickStrokeWidth={1}
-                                        style={{
-                                            data: {
-                                                rx: 3,
-                                                ry: 3,
-                                                fill: ({ datum }) =>
-                                                    datum.close > datum.open
-                                                        ? colors.green + 'DD'
-                                                        : colors.graph_red + 'DD',
-                                                stroke: ({ datum }) =>
-                                                    datum.close > datum.open
-                                                        ? colors.green
-                                                        : colors.graph_red,
-                                                strokeWidth: 1,
-                                            }
-                                        }}
-                                    />
+                                    {isCandlestick ? (
+                                        <VictoryCandlestick
+                                            data={candleData}
+                                            candleRatio={0.6}
+                                            wickStrokeWidth={1}
+                                            style={{
+                                                data: {
+                                                    rx: 3,
+                                                    ry: 3,
+                                                    fill: ({ datum }) =>
+                                                        datum.close > datum.open
+                                                            ? colors.green + 'DD'
+                                                            : colors.graph_red + 'DD',
+                                                    stroke: ({ datum }) =>
+                                                        datum.close > datum.open
+                                                            ? colors.green
+                                                            : colors.graph_red,
+                                                    strokeWidth: 1,
+                                                }
+                                            }}
+                                        />
+                                    ) : (
+                                        <VictoryLine
+                                            data={candleData}
+                                            x="x"
+                                            y="close"
+                                            style={{
+                                                data: {
+                                                    stroke: colors.green,
+                                                    strokeWidth: 1.5
+                                                }
+                                            }}
+                                        />
+                                    )}
                                     {lastPrice && (
                                         <VictoryLine
                                             data={[
@@ -311,14 +329,16 @@ const CoinDetails = ({ route }) => {
                         </TouchableOpacity>
                     ))}
                     <TouchableOpacity
-                        onPress={() => console.log('pressed')}
-                        style={styles.expandButton}
+                        onPress={() => setIsCandlestick(!isCandlestick)}
+                        style={[
+                            styles.toggleButton,
+                            { backgroundColor: isCandlestick ? colors.green : colors.background }
+                        ]}
                     >
-                        <ExpandIcon
-                            width={moderateScale(16)}
-                            height={moderateScale(16)}
-                            fill={colors.textSecondary}
-                        />
+                        <View style={[
+                            styles.toggleInner,
+                            { borderColor: isCandlestick ? colors.background : colors.textSecondary }
+                        ]} />
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -387,7 +407,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
         width: moderateScale(70),
         paddingVertical: verticalScale(4),
-        justifyContent:'center',
+        justifyContent: 'center',
         alignItems: 'center',
         // Add shadow for visibility
         shadowColor: '#000',
@@ -418,13 +438,63 @@ const styles = StyleSheet.create({
     },
     coinImage: { height: moderateScale(24), width: moderateScale(24), marginLeft: moderateScale(48) },
     headerText: { fontFamily: fonts.semibold, fontSize: moderateScale(16), color: colors.text, marginLeft: moderateScale(12) },
-    currentPrice: { fontFamily: fonts.regular, fontSize: moderateScale(32), color: colors.text, marginTop: verticalScale(24) },
     loaderOverlay: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.1)',
         zIndex: 5,
-    }
+    },
+    toggleButton: {
+        width: moderateScale(24),
+        height: moderateScale(24),
+        borderRadius: moderateScale(12),
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: colors.textSecondary,
+    },
+    toggleInner: {
+        width: moderateScale(12),
+        height: moderateScale(12),
+        borderRadius: moderateScale(6),
+        borderWidth: 1,
+    },
+    dataContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginTop: verticalScale(16),
+    },
+    priceContainer: {
+        flex: 1,
+        marginRight: moderateScale(16),
+    },
+    currentPrice: {
+        fontFamily: fonts.regular,
+        fontSize: moderateScale(32),
+        color: colors.text,
+        marginBottom: verticalScale(8),
+    },
+    statsContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+    },
+    statItem: {
+        alignItems: 'flex-end',
+        marginBottom: verticalScale(8),
+    },
+    statLabel: {
+        fontFamily: fonts.regular,
+        fontSize: RFValue(10),
+        textAlign: 'right',
+    },
+    statValue: {
+        fontFamily: fonts.semibold,
+        fontSize: moderateScale(14),
+        textAlign: 'right',
+    },
 });
 
 export default CoinDetails;

@@ -12,11 +12,21 @@ import { formatCurrentPrice } from '../utils/helpers';
 
 const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
   const { colors, fonts } = useTheme();
-  
+
   return (
     <Pressable
       onPress={() =>
-        NavigationService.navigate('CoinDetails', { coinId: coin.id, productId: coin.productId, coinImage: coin.image, coinName: coin.name, coinSymbol: coin.symbol, currentPrice: coin.currentPrice, priceChangePercentage24h: coin.priceChangePercentage24h })
+        NavigationService.navigate('CoinDetails', {
+          coinId: coin.id,
+          productId: coin.productId,
+          coinImage: coin.image,
+          coinName: coin.name,
+          coinSymbol: coin.symbol,
+          currentPrice: coin.currentPrice,
+          priceChangePercentage24h: coin.priceChangePercentage24h,
+          marketCap: coin.marketCap,
+          tradingVolume: coin.tradingVolume
+        })
       }
       style={styles.wrapper}
     >
@@ -26,14 +36,14 @@ const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
           symbol={coin.symbol}
           name={coin.name}
         />
-        
+
         <Text style={[styles.priceText, { color: colors.text }]}>
           {formatCurrentPrice(coin.currentPrice)}
         </Text>
       </View>
-      
+
       <View style={styles.rightView}>
-        <PercentageChangeBadge 
+        <PercentageChangeBadge
           changePercent={coin.priceChangePercentage24h}
         />
         <View style={styles.chartContainer}>

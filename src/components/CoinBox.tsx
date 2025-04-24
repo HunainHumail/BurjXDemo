@@ -22,7 +22,17 @@ const CoinBox: React.FC<Props> = ({ coin }) => {
   return (
     <Pressable
       onPress={() =>
-        NavigationService.navigate('CoinDetails', { coinId: coin.id, productId: coin.productId, coinImage: coin.image, coinName: coin.name, coinSymbol: coin.symbol, currentPrice: coin.currentPrice, priceChangePercentage24h: coin.priceChangePercentage24h })
+        NavigationService.navigate('CoinDetails', {
+          coinId: coin.id,
+          productId: coin.productId,
+          coinImage: coin.image,
+          coinName: coin.name,
+          coinSymbol: coin.symbol,
+          currentPrice: coin.currentPrice,
+          priceChangePercentage24h: coin.priceChangePercentage24h,
+          marketCap: coin.marketCap,
+          tradingVolume: coin.tradingVolume
+        })
       }
       style={[styles.wrapper, { width: cardWidth }]}
     >

@@ -12,32 +12,32 @@ const superscriptMap = {
     '7': '⁷',
     '8': '⁸',
     '9': '⁹',
-  };
-  
-  const toSuperscript = (numStr) => {
+};
+
+const toSuperscript = (numStr) => {
     return numStr.split('').map(char => superscriptMap[char] || char).join('');
-  };
-  
-  export const formatCurrency = (value) => {
+};
+
+export const formatCurrency = (value) => {
     if (typeof value !== 'number' || isNaN(value)) return '$0.00';
-  
+
     if (value >= 1000) {
-      const thousands = (value / 1000).toFixed(0);
-      return `$${thousands}K`;
+        const thousands = (value / 1000).toFixed(0);
+        return `$${thousands}K`;
     }
-  
+
     if (value >= 1) {
-      return `$${value.toFixed(2)}`;
+        return `$${value.toFixed(2)}`;
     }
-  
+
     if (value > 0 && value < 0.001) {
-      const [coefficient, exponent] = value.toExponential(2).split('e');
-      return `$${coefficient}×10${toSuperscript(exponent)}`;
+        const [coefficient, exponent] = value.toExponential(2).split('e');
+        return `$${coefficient}×10${toSuperscript(exponent)}`;
     }
-  
+
     return `$${value.toFixed(4).replace(/\.?0+$/, '')}`;
-  };
-  
+};
+
 export const formatCurrentPrice = (value) => {
     if (typeof value !== 'number' || isNaN(value)) return '$0';
 
@@ -60,3 +60,15 @@ export const measureYAxisWidth = (labels, fontSize = moderateScale(12), padding 
     return Math.ceil(longest.length * fontSize * 0.6) + padding;
 };
 
+export const formatLargeNumber = (value) => {
+    if (value >= 1e12) return `${(value / 1e12).toFixed(2)}T`;
+    if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
+    if (value >= 1e6) return `${(value / 1e6).toFixed(2)}M`;
+    return value.toLocaleString();
+};
+
+export const formatVolume = (value) => {
+    if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
+    if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
+    return `$${value.toLocaleString()}`;
+};
