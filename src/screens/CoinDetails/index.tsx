@@ -28,6 +28,9 @@ import PercentageChangeBadge from '../../components/PercentageChangeBadge';
 import ExpandIcon from '../../assets/icons/expand-icon.svg'
 import { formatCurrency, formatCurrentPrice, formatLargeNumber, formatVolume } from '../../utils/helpers';
 import { RFValue } from 'react-native-responsive-fontsize';
+import LineChartIcon from '../../assets/icons/chart-line.svg'
+import CandleChartIcon from '../../assets/icons/chart-candlestick.svg'
+
 
 const { width: screenWidth } = Dimensions.get('window');
 const timeframes = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
@@ -343,15 +346,21 @@ const CoinDetails = ({ route }) => {
                     ))}
                     <TouchableOpacity
                         onPress={() => setIsCandlestick(!isCandlestick)}
-                        style={[
-                            styles.toggleButton,
-                            { backgroundColor: isCandlestick ? colors.green : colors.background }
-                        ]}
+                        style={styles.toggleButton}
                     >
-                        <View style={[
-                            styles.toggleInner,
-                            { borderColor: isCandlestick ? colors.background : colors.textSecondary }
-                        ]} />
+                        {isCandlestick ? (
+                            <LineChartIcon
+                                width={moderateScale(24)}
+                                height={moderateScale(24)}
+                                stroke={colors.green}
+                            />
+                        ) : (
+                            <CandleChartIcon
+                                width={moderateScale(24)}
+                                height={moderateScale(24)}
+                                stroke={colors.green}
+                            />
+                        )}
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -463,12 +472,11 @@ const styles = StyleSheet.create({
     toggleButton: {
         width: moderateScale(24),
         height: moderateScale(24),
-        borderRadius: moderateScale(12),
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: colors.textSecondary,
-    },
+        marginLeft: moderateScale(8),
+        // Remove border styles if not needed
+      },
     toggleInner: {
         width: moderateScale(12),
         height: moderateScale(12),
