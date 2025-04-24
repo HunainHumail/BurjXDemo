@@ -36,7 +36,7 @@ export const AppNavigator = () => {
       <Stack.Screen
         name="CoinDetails"
         component={CoinDetails}
-        options={{ title: 'Coin Details' }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

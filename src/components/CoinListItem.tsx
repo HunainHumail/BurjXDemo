@@ -17,11 +17,10 @@ type Props = {
 
 const CoinListItem: React.FC<Props> = ({ coin }) => {
   const { colors, fonts } = useTheme();
-
   return (
     <Pressable
       onPress={() =>
-        NavigationService.navigate('CoinDetails', { coinId: coin.id })
+        NavigationService.navigate('CoinDetails', { coinId: coin.id, productId: coin.productId, coinImage: coin.image, coinName: coin.name, coinSymbol: coin.symbol, currentPrice: coin.currentPrice, priceChangePercentage24h: coin.priceChangePercentage24h })
       }
       style={styles.wrapper}
     >

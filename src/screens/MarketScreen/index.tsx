@@ -90,7 +90,7 @@ const MarketScreen = () => {
             tabBarInactiveTintColor: colors.textSecondary,
             sceneContainerStyle: { backgroundColor: colors.background },
             sceneStyle: { marginTop: 10 },
-            tabBarLabelStyle: { fontFamily: fonts.regular, fontSize: 20 }
+            tabBarLabelStyle: { fontFamily: fonts.regular, fontSize: moderateScale(16) }
           }}
         >
           <TopTabs.Screen
