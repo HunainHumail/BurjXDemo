@@ -52,6 +52,7 @@ const CoinDetails = ({ route }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [selectedTimeframe, setSelectedTimeframe] = useState('30D');
     const [isCandlestick, setIsCandlestick] = useState(true); // Add this state
+    const [yDomain, setYDomain] = useState([0, 100]);
 
     const scrollViewRef = useRef();
     const isFirstLoad = useRef(true);
@@ -70,6 +71,11 @@ const CoinDetails = ({ route }) => {
                 `https://coingeko.burjx.com/coin-ohlc?productId=${productId}&days=${daysMap[selectedTimeframe]}`
             );
             const json = await response.json();
+            const lows = json.map(item => +item.usd.low);
+            const highs = json.map(item => +item.usd.high);
+            const minVal = Math.min(...lows);
+            const maxVal = Math.max(...highs);
+            setYDomain([minVal * 0.98, maxVal * 1.02]);
             setCandleData(json.map(item => ({
                 x: new Date(item.date),
                 open: +item.usd.open,
@@ -97,10 +103,12 @@ const CoinDetails = ({ route }) => {
     );
 
     const lastPrice = candleData[candleData.length - 1]?.close;
-    const yDomain = candleData.length > 0 ? [
-        Math.min(...candleData.map(d => d.low)) * 0.95,
-        Math.max(...candleData.map(d => d.high)) * 1.05
-    ] : [0, 100];
+    // const yDomain = candleData.length > 0 ? [
+    //     Math.min(...candleData.map(d => d.low)) * 0.95,
+    //     Math.max(...candleData.map(d => d.high)) * 1.05
+    // ] : [0, 100];
+    // Tighter padding
+
 
 
     const yAxisPlotHeight = 350 - 20 - 30; // Total height - top padding - bottom padding
@@ -171,91 +179,94 @@ const CoinDetails = ({ route }) => {
                         </View>
 
                         <View style={styles.chartContainer}>
-                            <ScrollView
-                                ref={scrollViewRef}
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                contentContainerStyle={{ width: chartWidth }}
-                                decelerationRate={0.95}
-                            >
-                                <VictoryChart
-                                    width={chartWidth}
-                                    height={350}
-                                    scale={{ x: 'time' }}
-                                    padding={{ top: 20, bottom: 30, left: 40, right: 60 }}
-                                    domainPadding={20}
-
+                            <View style={styles.chartWrapper}>
+                                <ScrollView
+                                    ref={scrollViewRef}
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={{ width: chartWidth }}
+                                    decelerationRate={0.95}
                                 >
-                                    <VictoryAxis
-                                        style={{
-                                            axis: { stroke: 'transparent' },
-                                            tickLabels: {
-                                                fill: colors.textSecondary,
-                                                fontSize: moderateScale(10),
-                                                fontFamily: fonts.regular,
-                                            },
-                                            grid: {
-                                                stroke: colors.textSecondary + '11',
-                                                strokeWidth: 0.3,
-                                                strokeDasharray: "3,3",
-                                            }
-                                        }}
-                                        tickFormat={(t) => new Date(t).toLocaleDateString('en-GB', {
-                                            day: '2-digit',
-                                            month: 'short'
-                                        })}
-                                    />
-                                    {isCandlestick ? (
-                                        <VictoryCandlestick
-                                            data={candleData}
-                                            candleRatio={0.6}
-                                            wickStrokeWidth={1}
+                                    <VictoryChart
+                                        width={chartWidth}
+                                        height={350}
+                                        domain={{ y: yDomain }}
+                                        scale={{ x: 'time' }}
+                                        padding={{ top: 20, bottom: 30, left: 50, right: 50 }} // Balanced padding
+                                        domainPadding={20}
+
+                                    >
+                                        <VictoryAxis
                                             style={{
-                                                data: {
-                                                    rx: 3,
-                                                    ry: 3,
-                                                    fill: ({ datum }) =>
-                                                        datum.close > datum.open
-                                                            ? colors.green + 'DD'
-                                                            : colors.graph_red + 'DD',
-                                                    stroke: ({ datum }) =>
-                                                        datum.close > datum.open
-                                                            ? colors.green
-                                                            : colors.graph_red,
-                                                    strokeWidth: 1,
+                                                axis: { stroke: 'transparent' },
+                                                tickLabels: {
+                                                    fill: colors.textSecondary,
+                                                    fontSize: moderateScale(10),
+                                                    fontFamily: fonts.regular,
+                                                },
+                                                grid: {
+                                                    stroke: colors.textSecondary + '66',  // Increased opacity
+                                                    strokeWidth: 0.8,                    // Thicker lines
+                                                    strokeDasharray: "4,2",              // More visible dashes
                                                 }
                                             }}
+                                            tickFormat={(t) => new Date(t).toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: 'short'
+                                            })}
                                         />
-                                    ) : (
-                                        <VictoryLine
-                                            data={candleData}
-                                            x="x"
-                                            y="close"
-                                            style={{
-                                                data: {
-                                                    stroke: colors.green,
-                                                    strokeWidth: 1.5
-                                                }
-                                            }}
-                                        />
-                                    )}
-                                    {lastPrice && (
-                                        <VictoryLine
-                                            data={[
-                                                { x: candleData[0].x, y: lastPrice },
-                                                { x: candleData[candleData.length - 1].x, y: lastPrice }
-                                            ]}
-                                            style={{
-                                                data: {
-                                                    stroke: colors.green,
-                                                    strokeOpacity: 0.2,  // Increased visibility
-                                                    strokeWidth: 0.5     // Slightly thicker line
-                                                }
-                                            }}
-                                        />
-                                    )}
-                                </VictoryChart>
-                            </ScrollView>
+                                        {isCandlestick ? (
+                                            <VictoryCandlestick
+                                                data={candleData}
+                                                candleRatio={0.6}
+                                                wickStrokeWidth={1}
+                                                style={{
+                                                    data: {
+                                                        rx: 3,
+                                                        ry: 3,
+                                                        fill: ({ datum }) =>
+                                                            datum.close > datum.open
+                                                                ? colors.green + 'DD'
+                                                                : colors.graph_red + 'DD',
+                                                        stroke: ({ datum }) =>
+                                                            datum.close > datum.open
+                                                                ? colors.green
+                                                                : colors.graph_red,
+                                                        strokeWidth: 1,
+                                                    }
+                                                }}
+                                            />
+                                        ) : (
+                                            <VictoryLine
+                                                data={candleData}
+                                                x="x"
+                                                y="close"
+                                                style={{
+                                                    data: {
+                                                        stroke: colors.green,
+                                                        strokeWidth: 1.5
+                                                    }
+                                                }}
+                                            />
+                                        )}
+                                        {lastPrice && (
+                                            <VictoryLine
+                                                data={[
+                                                    { x: candleData[0].x, y: lastPrice },
+                                                    { x: candleData[candleData.length - 1].x, y: lastPrice }
+                                                ]}
+                                                style={{
+                                                    data: {
+                                                        stroke: colors.green,
+                                                        strokeOpacity: 0.2,  // Increased visibility
+                                                        strokeWidth: 0.5     // Slightly thicker line
+                                                    }
+                                                }}
+                                            />
+                                        )}
+                                    </VictoryChart>
+                                </ScrollView>
+                            </View>
                             {refreshing && (
                                 <View style={[StyleSheet.absoluteFill, styles.loaderOverlay]}>
                                     <ActivityIndicator size="small" color={colors.primary} />
@@ -265,8 +276,10 @@ const CoinDetails = ({ route }) => {
                                 <VictoryChart
                                     width={Y_AXIS_WIDTH}
                                     height={350}
-                                    padding={{ top: 20, bottom: 30, left: 20, right: 20 }}
                                     domain={{ y: yDomain }}
+                                    padding={{ top: 20, bottom: 30, left: 10, right: 30 }} // Match main chart
+                                // padding={{ top: 20, bottom: 30, left: 20, right: 20 }}
+                                // domain={{ y: yDomain }}
                                 >
                                     <VictoryAxis
                                         dependentAxis
@@ -281,9 +294,9 @@ const CoinDetails = ({ route }) => {
                                                 padding: 15,
                                             },
                                             grid: {
-                                                stroke: colors.textSecondary + '44',
-                                                strokeWidth: 1,
-                                                strokeDasharray: "2,4",
+                                                stroke: colors.textSecondary + '44', // Match X-axis opacity
+                                                strokeWidth: 0.5,
+                                                strokeDasharray: "2,2", // Consistent dotted style
                                             },
                                         }}
                                         tickFormat={formatCurrency}
@@ -393,11 +406,14 @@ const styles = StyleSheet.create({
     chartContainer: {
         flexDirection: 'row',
         height: 350,
+        position: 'relative', // Add this
     },
     yAxisContainer: {
         width: Y_AXIS_WIDTH,
         height: 350,
-        position: 'relative',
+        position: 'absolute',
+        right: 0,
+        zIndex: 2,
     },
     yAxisBadge: {
         position: 'absolute',
@@ -478,8 +494,6 @@ const styles = StyleSheet.create({
     statsContainer: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
     },
     statItem: {
         alignItems: 'flex-end',
@@ -488,12 +502,16 @@ const styles = StyleSheet.create({
     statLabel: {
         fontFamily: fonts.regular,
         fontSize: RFValue(10),
-        textAlign: 'right',
+
     },
     statValue: {
         fontFamily: fonts.semibold,
         fontSize: moderateScale(14),
-        textAlign: 'right',
+    },
+    chartWrapper: {
+        flexDirection: 'row',
+        height: 350,
+        overflow: 'hidden',
     },
 });
 
