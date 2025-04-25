@@ -124,7 +124,7 @@ const MarketScreen = () => {
           maxToRenderPerBatch={5}
           windowSize={150}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.allCoinsListView}
+          style={styles.allCoinsListView}
           ListFooterComponent={() =>
             hasMore ? (
               <ActivityIndicator style={{ padding: 10 }} color={colors.green} />
