@@ -1,25 +1,19 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useNavigation } from "@react-navigation/native";
-import { Pressable, View, Image, Text, TextInput, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, FlatList, ActivityIndicator } from "react-native";
 import { useTheme } from "../../themes/useTheme";
 import { useCallback, useEffect, useRef } from "react";
 import { useMarketStore } from "../../stores/marketStore";
-import { VictoryAxis, VictoryChart, VictoryLine } from "victory-native";
 import { colors, fonts } from "../../themes/theme";
-import { useRoute } from "@react-navigation/native";
 import AppButton from "../../components/AppButton";
-import { LegendList } from "@legendapp/list";
 import CategoryTab from "../../components/CategoryTab";
-import CoinItem from "../../components/CoinBox";
-import { moderateScale, verticalScale } from "react-native-size-matters";
 import CoinListItem from "../../components/CoinListItem";
 import styles from "./styles";
 import SearchIcon from '../../assets/icons/search.svg';
+import { moderateScale, verticalScale } from "react-native-size-matters";
 import { RFValue } from "react-native-responsive-fontsize";
-
+import NavigationService from '../../utils/NavigationService';
 
 const TopTabs = createMaterialTopTabNavigator();
-
 
 const MarketScreen = () => {
   const {
@@ -35,18 +29,8 @@ const MarketScreen = () => {
   const firstLoad = useRef(true);
   const loadingRef = useRef(loading);
 
-
   useEffect(() => {
     loadingRef.current = loading;
-  }, [loading]);
-
-
-  useEffect(() => {
-    console.log('Current state:', {
-      loading: useMarketStore.getState().loading,
-      allCoins: useMarketStore.getState().allCoins.length,
-      error: useMarketStore.getState().error
-    });
   }, [loading]);
 
   useEffect(() => {
@@ -60,7 +44,6 @@ const MarketScreen = () => {
       fetchAllCoins(true, true);
     }
   }, [hasMore]);
-
 
   if (loading && firstLoad.current) {
     return (
@@ -77,12 +60,11 @@ const MarketScreen = () => {
       </View>
     );
   }
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-
       <View style={{ height: '38%' }}>
         <TopTabs.Navigator
-          style={{ backgroundColor: 'red' }}
           screenOptions={{
             tabBarScrollEnabled: true,
             swipeEnabled: false,
@@ -91,7 +73,6 @@ const MarketScreen = () => {
             tabBarActiveTintColor: colors.text,
             tabBarInactiveTintColor: colors.textSecondary,
             sceneContainerStyle: { backgroundColor: colors.background },
-            // sceneStyle: { marginTop: verticalScale(10) },
             tabBarLabelStyle: { fontFamily: fonts.regular, fontSize: RFValue(14) }
           }}
         >
@@ -133,7 +114,11 @@ const MarketScreen = () => {
         </View>
         <FlatList
           data={filteredCoins}
-          renderItem={({ item }) => <CoinListItem coin={item} />}
+          renderItem={({ item }) => (
+            <CoinListItem
+              coin={item}
+            />
+          )}
           keyExtractor={(item) => item.id}
           initialNumToRender={10}
           maxToRenderPerBatch={5}
@@ -151,37 +136,13 @@ const MarketScreen = () => {
           }
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.3}
-          extraData={searchQuery} // Re-render when search query changes
+          extraData={searchQuery}
           keyboardShouldPersistTaps="handled"
           removeClippedSubviews={true}
         />
-        {/* <LegendList
-          style={styles.allCoinsListView}
-          data={filteredCoins}
-          renderItem={({ item }) => <CoinListItem coin={item} />}
-          keyExtractor={(item) => item.id}
-          estimatedItemSize={100}
-          showsVerticalScrollIndicator={false}
-          key={`list-${searchQuery}`}
-          // maintainVisibleContentPosition={{
-          //   minIndexForVisible: 1,
-          //   autoscrollToTopThreshold: 30,
-          // }}
-          ListFooterComponent={() =>
-            hasMore
-              ? <ActivityIndicator style={{ padding: 10 }} color={colors.green} />
-              : <Text style={{ textAlign: 'center', padding: 10 }}>
-                No more coins to show
-              </Text>
-          }
-          onEndReached={handleEndReached}
-          onEndReachedThreshold={0.3}
-        /> */}
       </View>
     </View>
   );
 };
-
-
 
 export default MarketScreen;

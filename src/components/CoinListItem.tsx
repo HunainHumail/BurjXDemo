@@ -9,25 +9,39 @@ import PercentageChangeBadge from './PercentageChangeBadge';
 import { colors, fonts } from '../themes/theme';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { formatCurrentPrice } from '../utils/helpers';
+import { useMarketStore } from '../stores/marketStore';
 
 const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
   const { colors, fonts } = useTheme();
 
   return (
     <Pressable
-      onPress={() =>
+      // onPress={() =>
+      //   NavigationService.navigate('CoinDetails', {
+      //     coinId: coin.id,
+      //     productId: coin.productId,
+      //     coinImage: coin.image,
+      //     coinName: coin.name,
+      //     coinSymbol: coin.symbol,
+      //     currentPrice: coin.currentPrice,
+      //     priceChangePercentage24h: coin.priceChangePercentage24h,
+      //     marketCap: coin.marketCap,
+      //     tradingVolume: coin.tradingVolume
+      //   })
+      // }
+      onPress={() => {
+        useMarketStore.getState().setSelectedCoin(coin.productId);
         NavigationService.navigate('CoinDetails', {
-          coinId: coin.id,
           productId: coin.productId,
-          coinImage: coin.image,
-          coinName: coin.name,
-          coinSymbol: coin.symbol,
+          image: coin.image,
+          name: coin.name,
+          symbol: coin.symbol,
           currentPrice: coin.currentPrice,
           priceChangePercentage24h: coin.priceChangePercentage24h,
           marketCap: coin.marketCap,
-          tradingVolume: coin.tradingVolume
-        })
-      }
+          tradingVolume: coin.tradingVolume,
+        });
+      }}
       style={styles.wrapper}
     >
       <View style={styles.leftView}>

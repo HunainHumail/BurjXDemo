@@ -10,6 +10,7 @@ import PercentageChangeBadge from './PercentageChangeBadge';
 import CardWrapper from './CardWrapper';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { formatCurrency, formatCurrentPrice } from '../utils/helpers';
+import { useMarketStore } from '../stores/marketStore';
 
 type Props = {
   coin: Coin;
@@ -21,19 +22,19 @@ const CoinBox: React.FC<Props> = ({ coin }) => {
   console.log('colors.card:', colors.card);
   return (
     <Pressable
-      onPress={() =>
+      onPress={() => {
+        useMarketStore.getState().setSelectedCoin(coin.productId);
         NavigationService.navigate('CoinDetails', {
-          coinId: coin.id,
           productId: coin.productId,
-          coinImage: coin.image,
-          coinName: coin.name,
-          coinSymbol: coin.symbol,
+          image: coin.image,
+          name: coin.name,
+          symbol: coin.symbol,
           currentPrice: coin.currentPrice,
           priceChangePercentage24h: coin.priceChangePercentage24h,
           marketCap: coin.marketCap,
-          tradingVolume: coin.tradingVolume
-        })
-      }
+          tradingVolume: coin.tradingVolume,
+        });
+      }}
       style={[styles.wrapper, { width: cardWidth }]}
     >
       <CardWrapper width={cardWidth} backgroundColor={colors.card}>
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text: {
-    fontSize: RFValue(14),
+    fontSize: RFValue(12),
   },
   chartContainer: {
     width: '100%',

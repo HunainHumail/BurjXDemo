@@ -34,7 +34,7 @@ const PercentageChangeBadge: React.FC<Props> = ({ changePercent }) => {
 const styles = StyleSheet.create({
   badge: {
     fontSize: RFValue(10),
-    padding: moderateScale(3),
+    padding: moderateScale(2),
     borderRadius: 6.5,
     width: moderateScale(50),
     justifyContent: 'center',
