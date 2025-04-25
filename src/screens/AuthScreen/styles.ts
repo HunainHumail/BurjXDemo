@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { colors, fonts } from "../../themes/theme";
 import { moderateScale, verticalScale } from "react-native-size-matters";
-import {RFValue} from 'react-native-responsive-fontsize'
+import { RFValue } from 'react-native-responsive-fontsize'
 
 const styles = StyleSheet.create({
     container: {
@@ -21,6 +21,13 @@ const styles = StyleSheet.create({
     },
     image: {
         height: verticalScale(400)
+    },
+    errorText: {
+        color: colors.icon_red,
+        fontFamily: fonts.regular,
+        fontSize: RFValue(25),
+        alignSelf: 'flex-start',
+        width: '60%'
     }
 });
 

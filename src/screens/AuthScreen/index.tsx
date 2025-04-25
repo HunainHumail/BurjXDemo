@@ -54,9 +54,11 @@ const AuthScreen: React.FC = () => {
         }
     };
 
-    if (isAuthenticated) {
-        NavigationService.reset('Market')
-    }
+    useEffect(() => {
+        if (isAuthenticated) {
+            NavigationService.reset('Market');
+        }
+    }, [isAuthenticated]);
 
     return (
         <View style={styles.container}>
