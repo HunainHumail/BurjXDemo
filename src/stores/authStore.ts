@@ -15,6 +15,7 @@ interface AuthState {
   ) => Promise<boolean>;
 }
 
+// Updated authStore.ts
 export const useAuthStore = create<AuthState>((set) => ({
   biometricAvailable: false,
   isAuthenticated: false,
@@ -22,20 +23,17 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkBiometricAvailability: async () => {
     try {
       const available = await checkAvailability();
-      set({ biometricAvailable: available });
+      set({ biometricAvailable: available !== BiometricEnums.None });
     } catch {
       set({ biometricAvailable: false });
     }
   },
 
-  authenticate: async (
-    promptTitle = 'Authenticate',
-    promptMessage = 'Use your biometrics to login'
-  ) => {
+  authenticate: async () => { // Remove unused parameters
     try {
-      await authenticate();
-      set({ isAuthenticated: true });
-      return true;
+      const success = await authenticate(); // Actual library call
+      set({ isAuthenticated: success });
+      return success;
     } catch {
       set({ isAuthenticated: false });
       return false;
