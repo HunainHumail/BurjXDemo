@@ -2,6 +2,7 @@ import React from 'react';
 import { moderateScale } from 'react-native-size-matters';
 import { VictoryAxis, VictoryChart, VictoryLine } from 'victory-native';
 import { useTheme } from '../themes/useTheme';
+import { View } from 'react-native';
 
 type Props = {
   data: number[];
@@ -23,19 +24,21 @@ const SparklineChart: React.FC<Props> = ({ data, changePercent }) => {
   const strokeColor = changePercent >= 0 ? colors.green : colors.graph_red;
 
   return (
-    <VictoryChart
-      width={moderateScale(100)}
-      height={moderateScale(37)}
-      padding={0}
-      domain={{ y: [minY, maxY] }}
-    >
-      <VictoryAxis style={axisStyles} />
-      <VictoryAxis dependentAxis style={axisStyles} />
-      <VictoryLine
-        data={chartData}
-        style={{ data: { stroke: strokeColor, strokeWidth: 1 } }}
-      />
-    </VictoryChart>
+    <View pointerEvents="none">
+      <VictoryChart
+        width={moderateScale(100)}
+        height={moderateScale(37)}
+        padding={0}
+        domain={{ y: [minY, maxY] }}
+      >
+        <VictoryAxis style={axisStyles} />
+        <VictoryAxis dependentAxis style={axisStyles} />
+        <VictoryLine
+          data={chartData}
+          style={{ data: { stroke: strokeColor, strokeWidth: 1 } }}
+        />
+      </VictoryChart>
+    </View>
   );
 };
 

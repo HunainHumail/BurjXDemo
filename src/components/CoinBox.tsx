@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View, Text, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { useTheme } from '../themes/useTheme';
 import NavigationService from '../utils/NavigationService';
@@ -19,45 +19,46 @@ type Props = {
 const CoinBox: React.FC<Props> = ({ coin }) => {
   const { colors, fonts } = useTheme();
   const cardWidth = moderateScale(160);
-  console.log('colors.card:', colors.card);
   return (
-    <Pressable
-      onPress={() => {
-        useMarketStore.getState().setSelectedCoin(coin.productId);
-        NavigationService.navigate('CoinDetails', {
-          productId: coin.productId,
-          image: coin.image,
-          name: coin.name,
-          symbol: coin.symbol,
-          currentPrice: coin.currentPrice,
-          priceChangePercentage24h: coin.priceChangePercentage24h,
-          marketCap: coin.marketCap,
-          tradingVolume: coin.tradingVolume,
-        });
-      }}
-      style={[styles.wrapper, { width: cardWidth }]}
-    >
-      <CardWrapper width={cardWidth} backgroundColor={colors.card}>
-        <CoinView image={coin.image} symbol={coin.symbol} name={coin.name} />
-        <View style={styles.chartContainer}>
-          <SparklineChart
-            data={coin.sparkline}
-            changePercent={coin.priceChangePercentage24h}
-          />
-        </View>
-        <View style={styles.footer}>
-          <Text
-            style={[
-              styles.text,
-              { fontFamily: fonts.regular, color: colors.text },
-            ]}
-          >
-            {formatCurrency(coin.currentPrice)}
-          </Text>
-          <PercentageChangeBadge changePercent={coin.priceChangePercentage24h} />
-        </View>
-      </CardWrapper>
-    </Pressable>
+    <View style={[styles.wrapper, { width: cardWidth }]}>
+      <TouchableOpacity
+        onPress={() => {
+          useMarketStore.getState().setSelectedCoin(coin.productId);
+          NavigationService.navigate('CoinDetails', {
+            productId: coin.productId,
+            image: coin.image,
+            name: coin.name,
+            symbol: coin.symbol,
+            currentPrice: coin.currentPrice,
+            priceChangePercentage24h: coin.priceChangePercentage24h,
+            marketCap: coin.marketCap,
+            tradingVolume: coin.tradingVolume,
+          });
+        }}
+
+      >
+        <CardWrapper width={cardWidth} backgroundColor={colors.card}>
+          <CoinView image={coin.image} symbol={coin.symbol} name={coin.name} />
+          <View style={styles.chartContainer}>
+            <SparklineChart
+              data={coin.sparkline}
+              changePercent={coin.priceChangePercentage24h}
+            />
+          </View>
+          <View style={styles.footer}>
+            <Text
+              style={[
+                styles.text,
+                { fontFamily: fonts.regular, color: colors.text },
+              ]}
+            >
+              {formatCurrency(coin.currentPrice)}
+            </Text>
+            <PercentageChangeBadge changePercent={coin.priceChangePercentage24h} />
+          </View>
+        </CardWrapper>
+      </TouchableOpacity>
+    </View>
   );
 };
 
