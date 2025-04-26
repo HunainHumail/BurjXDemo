@@ -80,13 +80,13 @@ const CoinDetails = ({ route }) => {
     }
 
     // Loading state for initial OHLC data fetch
-    if (store.loading && store.ohlcData.length === 0) {
-        return (
-            <View style={[styles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }]}>
-                <ActivityIndicator size="large" color={colors.green} />
-            </View>
-        );
-    }
+    // if (store.loading && store.ohlcData.length === 0) {
+    //     return (
+    //         <View style={[styles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }]}>
+    //             <ActivityIndicator size="large" color={colors.green} />
+    //         </View>
+    //     );
+    // }
 
     // Error state
     if (store.error) {
@@ -152,6 +152,11 @@ const CoinDetails = ({ route }) => {
                         </View>
                     </View>
                     <View style={styles.chartContainer}>
+                        {store.loading && (
+                            <View style={[styles.chartLoader, { backgroundColor: colors.background + 'CC' }]}>
+                                <ActivityIndicator size="large" color={colors.green} />
+                            </View>
+                        )}
                         <View style={styles.chartWrapper}>
                             <ScrollView
                                 ref={scrollViewRef}
