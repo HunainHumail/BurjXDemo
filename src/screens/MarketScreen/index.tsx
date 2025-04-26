@@ -40,6 +40,7 @@ const MarketScreen = () => {
   const firstLoad = useRef(true);
   const loadingRef = useRef(loading);
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // Add this line
 
   // Calculate initial height (38% of screen)
   const screenHeight = Dimensions.get('window').height;
@@ -62,11 +63,16 @@ const MarketScreen = () => {
     }
   }, []);
 
-  const handleEndReached = useCallback(() => {
+  const handleEndReached = useCallback(async () => { // Modified to async
     if (!loadingRef.current && hasMore) {
-      fetchAllCoins(true, true);
+      setIsLoadingMore(true); // Set local loading state
+      try {
+        await fetchAllCoins(true, true);
+      } finally {
+        setIsLoadingMore(false); // Reset after fetch
+      }
     }
-  }, [hasMore]);
+  }, [hasMore, fetchAllCoins]);
 
   const activateSearch = () => {
     setIsSearchActive(true);
@@ -142,8 +148,8 @@ const MarketScreen = () => {
             </View>
           </View>
         ) : (
-          <View style={[styles.coinListingHeader, { justifyContent: 'center', backgroundColor: colors.background,  marginTop: verticalScale(10) }]}>  
-            <View style={[styles.searchContainer, { flex: 1 }]}>  
+          <View style={[styles.coinListingHeader, { justifyContent: 'center', backgroundColor: colors.background, marginTop: verticalScale(10) }]}>
+            <View style={[styles.searchContainer, { flex: 1 }]}>
               <TextInput
                 placeholder="Search..."
                 style={styles.searchInput}
@@ -153,7 +159,7 @@ const MarketScreen = () => {
                 placeholderTextColor={colors.textSecondary}
               />
               <TouchableOpacity onPress={deactivateSearch} style={{ padding: moderateScale(4) }}>
-                <XIcon color={colors.text}/>
+                <XIcon color={colors.text} />
               </TouchableOpacity>
             </View>
           </View>
@@ -170,8 +176,14 @@ const MarketScreen = () => {
           style={styles.allCoinsListView}
           ListFooterComponent={() => {
             if (searchQuery) return null;
-            if (loading && hasMore) return <ActivityIndicator style={{ padding: 10 }} color={colors.green} />;
-            return <Text style={{ textAlign: 'center', padding: 10 }}>No more coins to show</Text>;
+            if (isLoadingMore && hasMore) return ( // Use local isLoadingMore
+              <ActivityIndicator style={{ padding: 10 }} color={colors.green} />
+            );
+            return !hasMore && (
+              <Text style={{ textAlign: 'center', padding: 10 }}>
+                No more coins to show
+              </Text>
+            );
           }}
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.3}
