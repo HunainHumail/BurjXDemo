@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         fontFamily: fonts.regular,
         fontSize: RFValue(25),
         alignSelf: 'flex-start',
-        width: '60%'
+        width: '70%'
     },
     image: {
         height: verticalScale(400)

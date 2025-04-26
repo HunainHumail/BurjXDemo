@@ -1,3 +1,4 @@
+import { Dimensions } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 
 const superscriptMap = {
@@ -72,3 +73,6 @@ export const formatVolume = (value) => {
     if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
     return `$${value.toLocaleString()}`;
 };
+
+export const SCREEN_HEIGHT = Dimensions.get('window').height;
+

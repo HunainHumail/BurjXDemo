@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View, Text, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { moderateScale, verticalScale, scale } from 'react-native-size-matters';
 import { useTheme } from '../themes/useTheme';
 import NavigationService from '../utils/NavigationService';
@@ -11,24 +11,11 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { formatCurrentPrice } from '../utils/helpers';
 import { useMarketStore } from '../stores/marketStore';
 
-const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
+const CoinListItem: React.FC<{ coin: Coin }> = React.memo(({ coin }) => {
   const { colors, fonts } = useTheme();
 
   return (
-    <Pressable
-      // onPress={() =>
-      //   NavigationService.navigate('CoinDetails', {
-      //     coinId: coin.id,
-      //     productId: coin.productId,
-      //     coinImage: coin.image,
-      //     coinName: coin.name,
-      //     coinSymbol: coin.symbol,
-      //     currentPrice: coin.currentPrice,
-      //     priceChangePercentage24h: coin.priceChangePercentage24h,
-      //     marketCap: coin.marketCap,
-      //     tradingVolume: coin.tradingVolume
-      //   })
-      // }
+    <TouchableOpacity
       onPress={() => {
         useMarketStore.getState().setSelectedCoin(coin.productId);
         NavigationService.navigate('CoinDetails', {
@@ -69,9 +56,9 @@ const CoinListItem: React.FC<{ coin: Coin }> = ({ coin }) => {
           />
         </View>
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   wrapper: {

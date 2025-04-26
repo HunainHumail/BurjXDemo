@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     },
     allCoinsListView: {
         marginTop: verticalScale(17)
-    }
+    },
+    footer:{ padding: 10 }
 });
 export default styles

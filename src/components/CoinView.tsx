@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { useTheme } from '../themes/useTheme';
 import { RFValue } from 'react-native-responsive-fontsize';
+import FastImage from '@d11/react-native-fast-image';
 
 export type Coin = {
     productId: number;
@@ -28,7 +29,7 @@ const CoinView: React.FC<Props> = ({ image, symbol, name }) => {
 
     return (
         <View style={styles.container}>
-            <Image source={{ uri: image }} style={styles.image} />
+            <FastImage source={{ uri: image }} style={styles.image} />
             <View style={styles.nameContainer}>
                 <Text style={[styles.text, { fontFamily: fonts.regular, color: colors.text }]}>
                     {symbol.toUpperCase()}

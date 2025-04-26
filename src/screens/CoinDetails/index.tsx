@@ -27,6 +27,7 @@ import { useMarketStore } from '../../stores/marketStore';
 import CoinSelector from '../../components/CoinSelector';
 import styles from './styles';
 import { Dimensions } from 'react-native';
+import DropDownArrow from '../../assets/icons/chevron-down.svg'
 
 const { width: screenWidth } = Dimensions.get('window');
 const timeframes = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
@@ -131,6 +132,7 @@ const CoinDetails = ({ route }) => {
                         <TouchableOpacity onPress={() => setModalVisible(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Image source={{ uri: image }} style={styles.coinImage} />
                             <Text style={styles.headerText}>{name} ({symbol.toUpperCase()})</Text>
+                            <DropDownArrow fill={colors.text} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.dataContainer}>
