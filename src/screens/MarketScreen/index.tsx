@@ -1,6 +1,5 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { View, Text, TextInput, FlatList, ActivityIndicator } from "react-native";
-import { useTheme } from "../../themes/useTheme";
 import { useCallback, useEffect, useRef } from "react";
 import { useMarketStore } from "../../stores/marketStore";
 import { colors, fonts } from "../../themes/theme";
@@ -8,10 +7,9 @@ import AppButton from "../../components/AppButton";
 import CategoryTab from "../../components/CategoryTab";
 import CoinListItem from "../../components/CoinListItem";
 import styles from "./styles";
-import SearchIcon from '../../assets/icons/search.svg';
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import { RFValue } from "react-native-responsive-fontsize";
-import NavigationService from '../../utils/NavigationService';
+import { SeachIcon } from "../../constants/images";
 
 const TopTabs = createMaterialTopTabNavigator();
 
@@ -19,7 +17,6 @@ const MarketScreen = () => {
   const {
     fetchAllCoins,
     setSearchQuery,
-    loadMore,
     loading,
     error,
     hasMore,
@@ -106,7 +103,7 @@ const MarketScreen = () => {
               onChangeText={setSearchQuery}
               placeholderTextColor={colors.textSecondary}
             />
-            <SearchIcon
+            <SeachIcon
               width={moderateScale(20)}
               height={moderateScale(20)}
             />
@@ -121,7 +118,7 @@ const MarketScreen = () => {
           )}
           keyExtractor={(item) => item.id}
           initialNumToRender={10}
-          maxToRenderPerBatch={5}
+          maxToRenderPerBatch={10}
           windowSize={150}
           showsVerticalScrollIndicator={false}
           style={styles.allCoinsListView}

@@ -16,17 +16,14 @@ import {
 } from 'victory-native';
 import { useTheme } from '../../themes/useTheme';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
-import { BackIcon, Banner } from '../../constants/images';
+import { BackIcon, Banner, CandleChartIcon, DropDownArrow, LineChartIcon } from '../../constants/images';
 import NavigationService from '../../utils/NavigationService';
 import PercentageChangeBadge from '../../components/PercentageChangeBadge';
 import { formatCurrency, formatCurrentPrice, formatLargeNumber, formatVolume } from '../../utils/helpers';
-import LineChartIcon from '../../assets/icons/chart-line.svg';
-import CandleChartIcon from '../../assets/icons/chart-candlestick.svg';
 import { useMarketStore } from '../../stores/marketStore';
 import CoinSelector from '../../components/CoinSelector';
 import styles from './styles';
 import { Dimensions } from 'react-native';
-import DropDownArrow from '../../assets/icons/chevron-down.svg'
 import { RouteProp } from '@react-navigation/native';
 
 
