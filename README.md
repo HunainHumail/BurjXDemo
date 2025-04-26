@@ -1,97 +1,119 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# React Native Application
 
-# Getting Started
+This is a React Native project that strictly follows a scalable, modular, and organized architecture. The UI has been developed to match the provided Figma designs **exactly**, ensuring a pixel-perfect and consistent user experience across devices.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 📁 Project Structure
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+```
+project-root/
+├── App.tsx                 # Entry point (moved to root for better clarity)
+└── src/
+    ├── assets/             # Fonts, icons, and images used across the app
+    │   ├── fonts/
+    │   ├── icons/
+    │   └── images/
+    ├── components/         # Reusable UI components
+    │   ├── AppButton.tsx
+    │   ├── CardWrapper.tsx
+    │   └── ... (other components)
+    ├── constants/          # App constants (images, static values)
+    │   └── images.ts
+    ├── navigation/         # App's navigation configuration
+    │   └── AppNavigator.tsx
+    ├── screens/            # Screen-specific components
+    │   ├── AuthScreen/
+    │   ├── CoinDetails/
+    │   └── MarketScreen/
+    ├── stores/             # Global state management (using Zustand)
+    │   ├── authStore.ts
+    │   └── marketStore.ts
+    ├── themes/             # Centralized theme and styling
+    │   ├── theme.ts
+    │   └── userTheme.ts
+    └── utils/              # Utility/helper functions
+        ├── helpers.ts
+        └── NavigationService.ts
 ```
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## ⚙️ Why This Directory Structure?
 
-### Android
+- **Separation of Concerns**: All features and utilities are divided cleanly (screens, components, stores, navigation, themes, etc.).
+- **Scalability**: Easy to maintain and scale as the app grows.
+- **Reusability**: Components and utilities are organized for maximum reusability.
+- **Clarity**: `App.tsx` is at the project root, making it easier to locate the main entry point.
+- **Consistency**: Assets, constants, and themes are centralized for a uniform design system across the app.
 
-```sh
-# Using npm
-npm run android
+---
 
-# OR using Yarn
-yarn android
-```
+## 🚀 How to Run the Application
 
-### iOS
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd project-root
+   ```
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+   or
+   ```bash
+   yarn install
+   ```
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+3. **Apply `patch-package` patches**
 
-```sh
-bundle install
-```
+   We use `patch-package` to fix some library issues.  
+   Before running the app, apply all patches:
+   ```bash
+   npx patch-package
+   ```
 
-Then, and every time you update your native dependencies, run:
+4. **Run on Android**
+   ```bash
+   npx react-native run-android
+   ```
 
-```sh
-bundle exec pod install
-```
+5. **Run on iOS** (Mac only)
+   ```bash
+   cd ios
+   pod install
+   cd ..
+   npx react-native run-ios
+   ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+---
 
-```sh
-# Using npm
-npm run ios
+## 🛠 Special Notes
 
-# OR using Yarn
-yarn ios
-```
+- **Biometric Authentication**:  
+  We are using [`react-native-simple-biometric`](https://github.com/mjdev/react-native-simple-biometric) for biometric authentication.
+  
+  - The native **Android** implementation from the library was **not functioning correctly**.
+  - I have **updated and patched** the native Kotlin code to fix biometric authentication issues on Android devices.
+  - This patch is automatically applied when running `npx patch-package`, so you don't need to manually modify the library code.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- **UI Implementation**:  
+  The application strictly follows the UI/UX designs provided in **Figma**, ensuring a clean, consistent, and professional look throughout.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+---
 
-## Step 3: Modify your app
+## 📦 Dependencies Highlight
 
-Now that you have successfully run the app, let's make changes!
+- React Native
+- Zustand (for state management)
+- React Navigation
+- patch-package
+- react-native-simple-biometric (with native Android patch)
+- Styled theming (centralized theme management)
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+---
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 📄 Conclusion
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project is structured to be **scalable**, **easy to navigate**, and **developer-friendly**. It follows **industry best practices** and has been tailored to closely match the design specifications provided.
