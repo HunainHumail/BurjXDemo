@@ -8,7 +8,7 @@ This is a React Native project that strictly follows a scalable, modular, and or
 
 ```
 project-root/
-├── App.tsx                 # Entry point (moved to root for better clarity)
+├── App.tsx                 # Entry point
 └── src/
     ├── assets/             # Fonts, icons, and images used across the app
     │   ├── fonts/
