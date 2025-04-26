@@ -16,8 +16,7 @@ import {
 } from 'victory-native';
 import { useTheme } from '../../themes/useTheme';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
-import { Banner } from '../../constants/images';
-import BackIcon from '../../assets/icons/icon-back.svg';
+import { BackIcon, Banner } from '../../constants/images';
 import NavigationService from '../../utils/NavigationService';
 import PercentageChangeBadge from '../../components/PercentageChangeBadge';
 import { formatCurrency, formatCurrentPrice, formatLargeNumber, formatVolume } from '../../utils/helpers';
@@ -28,6 +27,8 @@ import CoinSelector from '../../components/CoinSelector';
 import styles from './styles';
 import { Dimensions } from 'react-native';
 import DropDownArrow from '../../assets/icons/chevron-down.svg'
+import { RouteProp } from '@react-navigation/native';
+
 
 const { width: screenWidth } = Dimensions.get('window');
 const timeframes = ['1D', '7D', '30D', '90D', '1Y', 'ALL'];
@@ -35,27 +36,27 @@ const CANDLE_SPACING = moderateScale(2);
 const CANDLE_VISUAL_WIDTH = moderateScale(10);
 const Y_AXIS_WIDTH = moderateScale(50);
 
-const CoinDetails = ({ route }) => {
+type CoinDetailsRouteParams = {
+    productId: number;
+    image: string;
+    name: string;
+    symbol: string;
+    currentPrice: number;
+    priceChangePercentage24h: number;
+    marketCap: number;
+    tradingVolume: number;
+};
+
+type CoinDetailsProps = {
+    route: RouteProp<{ CoinDetails: CoinDetailsRouteParams }, 'CoinDetails'>;
+};
+
+const CoinDetails: React.FC<CoinDetailsProps> = ({ route }) => {
     const { colors, fonts } = useTheme();
     const store = useMarketStore();
     const [isCandlestick, setIsCandlestick] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
-    const scrollViewRef = useRef();
-
-    // Set initial coin from route params
-    useEffect(() => {
-        if (route.params?.productId && !store.selectedCoinId) {
-            store.setSelectedCoin(route.params.productId);
-        }
-    }, [route.params?.productId]);
-
-    // Auto-scroll chart to end when data loads
-    useEffect(() => {
-        if (!store.loading && store.ohlcData.length > 0) {
-            scrollViewRef.current?.scrollToEnd();
-        }
-    }, [store.loading, store.ohlcData]);
-
+    const scrollViewRef = useRef<ScrollView>(null);
     // Use route params for coin data
     const {
         productId,
@@ -68,7 +69,32 @@ const CoinDetails = ({ route }) => {
         tradingVolume,
     } = route.params || {};
 
-    // Handle case where no coin data is provided
+    // Set initial coin from route params
+    useEffect(() => {
+        if (productId && !store.selectedCoinId) {
+            store.setSelectedCoin(productId);
+        }
+    }, [productId]);
+
+    // Auto-scroll chart to end when data loads
+    useEffect(() => {
+        if (!store.loading && store.ohlcData.length > 0) {
+            scrollViewRef.current?.scrollToEnd();
+        }
+    }, [store.loading, store.ohlcData]);
+
+
+
+    // Initial loading state (no data yet)
+    if (store.loading && store.ohlcData.length === 0) {
+        return (
+            <View style={[styles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }]}>
+                <ActivityIndicator size="large" color={colors.green} />
+            </View>
+        );
+    }
+
+
     if (!productId || !image || !name || !symbol) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }]}>
@@ -79,14 +105,6 @@ const CoinDetails = ({ route }) => {
         );
     }
 
-    // Loading state for initial OHLC data fetch
-    // if (store.loading && store.ohlcData.length === 0) {
-    //     return (
-    //         <View style={[styles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }]}>
-    //             <ActivityIndicator size="large" color={colors.green} />
-    //         </View>
-    //     );
-    // }
 
     // Error state
     if (store.error) {

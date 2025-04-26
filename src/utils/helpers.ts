@@ -1,7 +1,7 @@
 import { Dimensions } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 
-const superscriptMap = {
+const superscriptMap: Record<string, string> = {
     '-': '⁻',
     '0': '⁰',
     '1': '¹',
@@ -15,11 +15,11 @@ const superscriptMap = {
     '9': '⁹',
 };
 
-const toSuperscript = (numStr) => {
+const toSuperscript = (numStr: string) => {
     return numStr.split('').map(char => superscriptMap[char] || char).join('');
 };
 
-export const formatCurrency = (value) => {
+export const formatCurrency = (value: number) => {
     if (typeof value !== 'number' || isNaN(value)) return '$0.00';
 
     if (value >= 1000) {
@@ -39,7 +39,7 @@ export const formatCurrency = (value) => {
     return `$${value.toFixed(4).replace(/\.?0+$/, '')}`;
 };
 
-export const formatCurrentPrice = (value) => {
+export const formatCurrentPrice = (value: number) => {
     if (typeof value !== 'number' || isNaN(value)) return '$0';
 
     if (value >= 1) {
@@ -56,19 +56,19 @@ export const formatCurrentPrice = (value) => {
     }
 };
 
-export const measureYAxisWidth = (labels, fontSize = moderateScale(12), padding = 20) => {
+export const measureYAxisWidth = (labels: string[], fontSize = moderateScale(12), padding = 20) => {
     const longest = labels.reduce((a, b) => a.length > b.length ? a : b, '');
     return Math.ceil(longest.length * fontSize * 0.6) + padding;
 };
 
-export const formatLargeNumber = (value) => {
+export const formatLargeNumber = (value: number) => {
     if (value >= 1e12) return `${(value / 1e12).toFixed(2)}T`;
     if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
     if (value >= 1e6) return `${(value / 1e6).toFixed(2)}M`;
     return value.toLocaleString();
 };
 
-export const formatVolume = (value) => {
+export const formatVolume = (value: number) => {
     if (value >= 1e9) return `$${(value / 1e9).toFixed(2)}B`;
     if (value >= 1e6) return `$${(value / 1e6).toFixed(2)}M`;
     return `$${value.toLocaleString()}`;

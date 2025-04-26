@@ -13,6 +13,24 @@ interface Coin {
     symbol: string;
 }
 
+interface OHLCPoint {
+    x: Date;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+}
+
+interface RawOHLCResponseItem {
+    date: string;
+    usd: {
+        open: number | string;
+        high: number | string;
+        low: number | string;
+        close: number | string;
+    };
+}
+
 interface MarketState {
     allCoins: Coin[];
     filteredCoins: Coin[];
@@ -124,12 +142,12 @@ export const useMarketStore = create<MarketState>((set, get) => ({
         set({ loading: true, error: null });
 
         try {
-            const daysMap = { '1D': 1, '7D': 7, '30D': 30, '90D': 90, '1Y': 365, 'ALL': 'max' };
+            const daysMap: Record<string, number | 'max'>  = { '1D': 1, '7D': 7, '30D': 30, '90D': 90, '1Y': 365, 'ALL': 'max' };
             const response = await fetch(
                 `https://coingeko.burjx.com/coin-ohlc?productId=${selectedCoinId}&days=${daysMap[selectedTimeframe]}`
             );
-            const json = await response.json();
-            const ohlc = json.map(item => ({
+            const json: RawOHLCResponseItem[] = await response.json();
+            const ohlc: OHLCPoint[] = json.map(item => ({
                 x: new Date(item.date),
                 open: +item.usd.open,
                 high: +item.usd.high,
@@ -145,8 +163,9 @@ export const useMarketStore = create<MarketState>((set, get) => ({
                 yDomain: [minVal * 0.98, maxVal * 1.02],
                 loading: false,
             });
-        } catch (err) {
-            set({ error: err.message, loading: false });
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : String(err);
+            set({ error: message, loading: false });
         }
     },
 }));
