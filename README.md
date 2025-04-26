@@ -4,6 +4,21 @@ This is a React Native project that strictly follows a scalable, modular, and or
 
 ---
 
+## 📹 App Demo Videos
+
+Here are short demo videos showing the app running on both Android and iOS devices:
+
+---
+
+
+### 🍎 App Demo
+
+[![Watch iOS Demo](https://img.youtube.com/vi/C2VkED3fP80/0.jpg)](https://youtube.com/shorts/C2VkED3fP80?feature=share)
+
+---
+
+> 📢 **Note**: FaceID and TouchID features are demonstrated on real devices as they do not work in emulators/simulators.
+
 ## 📁 Project Structure
 
 ```
