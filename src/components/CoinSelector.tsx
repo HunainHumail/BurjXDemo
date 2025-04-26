@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, Modal, StyleSheet, ActivityIndicator, Platform, StatusBar } from 'react-native';
+import { View, Text, Modal, StyleSheet, ActivityIndicator, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import { useMarketStore } from '../stores/marketStore';
 import { useTheme } from '../themes/useTheme';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
@@ -17,11 +17,10 @@ type Props = {
 export default function CoinSelector({ visible, onClose, onSelect }: Props) {
     const { colors, fonts } = useTheme();
     const {
-        filteredCoins,
+        allCoins,
         loading,
         hasMore,
-        loadMore,
-        setSearchQuery
+        loadMore
     } = useMarketStore();
 
     const renderItem = useCallback(
@@ -35,24 +34,29 @@ export default function CoinSelector({ visible, onClose, onSelect }: Props) {
         <Modal
             presentationStyle={Platform.OS === 'ios' ? 'formSheet' : 'fullScreen'}
             statusBarTranslucent={true}
-            // style={{ height: '80%', marginTop: 20 }}
             visible={visible}
             animationType="slide"
             onRequestClose={onClose}
         >
-            <View style={[styles.header, { backgroundColor: colors.background, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }]}>
-                <TextInput
-                    placeholder="Search coins..."
-                    placeholderTextColor={colors.textSecondary}
-                    onChangeText={setSearchQuery}
-                    style={[styles.searchInput, { color: colors.text, borderColor: colors.lightGrey }]}
-                />
+            <View style={[styles.header, { 
+                backgroundColor: colors.background, 
+                paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+                justifyContent: 'flex-end'
+            }]}>
                 <TouchableOpacity onPress={onClose}>
-                    <Text style={{ color: colors.green, fontFamily: fonts.semibold }}>Close</Text>
+                    <Text style={{ 
+                        color: colors.green, 
+                        fontFamily: fonts.semibold,
+                        fontSize: moderateScale(16),
+                        padding: moderateScale(12)
+                    }}>
+                        Close
+                    </Text>
                 </TouchableOpacity>
             </View>
+            
             <LegendList
-                data={filteredCoins}
+                data={allCoins}
                 keyExtractor={keyExtractor}
                 renderItem={renderItem}
                 recycleItems
@@ -61,11 +65,20 @@ export default function CoinSelector({ visible, onClose, onSelect }: Props) {
                 waitForInitialLayout
                 onEndReached={() => hasMore && loadMore()}
                 onEndReachedThreshold={0.5}
-                ListFooterComponent={hasMore ? <ActivityIndicator style={{ margin: 16 }} color={colors.green} /> : null}
+                ListFooterComponent={hasMore ? 
+                    <ActivityIndicator style={{ margin: 16 }} color={colors.green} /> : 
+                    <Text style={{ 
+                        textAlign: 'center', 
+                        padding: 16, 
+                        color: colors.textSecondary,
+                        fontFamily: fonts.regular
+                    }}>
+                        All coins loaded
+                    </Text>}
                 style={{ backgroundColor: colors.background }}
                 contentContainerStyle={{ backgroundColor: colors.background }}
             />
-        </Modal >
+        </Modal>
     );
 }
 
@@ -76,28 +89,27 @@ const CoinRow = React.memo(({ item, onSelect }) => (
     </TouchableOpacity>
 ));
 
-
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         padding: moderateScale(12),
-        justifyContent: 'space-between',
         alignItems: 'center'
-    },
-    searchInput: {
-        flex: 1,
-        borderWidth: 1,
-        borderRadius: moderateScale(8),
-        paddingHorizontal: moderateScale(10),
-        marginRight: moderateScale(8),
-        height: verticalScale(36),
     },
     row: {
         padding: moderateScale(12),
         borderBottomWidth: 1,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderBottomColor: colors.lightGrey
     },
-    icon: { width: moderateScale(20), height: moderateScale(20), marginRight: moderateScale(12) },
-    text: { color: colors.text, fontFamily: fonts.regular, marginLeft: moderateScale(20) }
+    icon: { 
+        width: moderateScale(20), 
+        height: moderateScale(20), 
+        marginRight: moderateScale(12) 
+    },
+    text: { 
+        color: colors.text, 
+        fontFamily: fonts.regular, 
+        fontSize: moderateScale(14)
+    }
 });

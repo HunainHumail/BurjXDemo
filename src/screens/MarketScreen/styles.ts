@@ -17,12 +17,6 @@ const styles = StyleSheet.create({
     chart: {
         marginTop: verticalScale(5),
     },
-    centerContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-
     allCoins: {
         color: colors.text,
         fontFamily: fonts.regular,
@@ -71,6 +65,30 @@ const styles = StyleSheet.create({
     allCoinsListView: {
         marginTop: verticalScale(17)
     },
-    footer:{ padding: 10 }
+    footer:{ padding: 10 },
+    iconContainer: {
+        position: 'absolute',
+        right: moderateScale(15),
+      },
+      clearContainer: {
+        position: 'absolute',
+        right: moderateScale(15),
+      },
+      listContainer: {
+        flex: 1,
+        zIndex: 1,
+      },
+      endText: {
+        textAlign: 'center',
+        color: colors.textSecondary,
+        padding: moderateScale(10),
+        fontFamily: fonts.regular,
+      },
+      centerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.background,
+      },
 });
 export default styles

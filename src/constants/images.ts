@@ -3,6 +3,7 @@ import Back from '../assets/icons/icon-back.svg';
 import LineChart from '../assets/icons/chart-line.svg';
 import CandleChart from '../assets/icons/chart-candlestick.svg';
 import DropDownIcon from '../assets/icons/chevron-down.svg'
+import X from '../assets/icons/x.svg'
 
 const IMAGES = {
     biometricLogo: require('../assets/images/biometric-image.png'),
@@ -16,7 +17,8 @@ const IMAGES = {
     backIcon: Back,
     lineChartIcon: LineChart,
     candleChartIcon: CandleChart,
-    dropDownIcon: DropDownIcon
+    dropDownIcon: DropDownIcon,
+    xIcon: X
   }
   
   export type ImageKey = keyof typeof IMAGES;
@@ -35,3 +37,4 @@ const IMAGES = {
   export const LineChartIcon = SVGS.lineChartIcon
   export const CandleChartIcon = SVGS.candleChartIcon
   export const DropDownArrow = SVGS.dropDownIcon
+  export const XIcon = SVGS.xIcon

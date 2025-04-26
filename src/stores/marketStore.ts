@@ -90,15 +90,26 @@ export const useMarketStore = create<MarketState>((set, get) => ({
             const calculateList = (sortFn: (a: Coin, b: Coin) => number) =>
                 mergedCoins.slice().sort(sortFn).slice(0, 20);
 
-            set({
-                allCoins: mergedCoins,
-                filteredCoins: mergedCoins,
-                currentPage: targetPage,
-                hasMore: newCoins.length === pageSize,
-                featured: calculateList((a, b) => b.marketCap - a.marketCap),
-                topGainers: calculateList((a, b) => b.priceChangePercentage24h - a.priceChangePercentage24h),
-                topLosers: calculateList((a, b) => a.priceChangePercentage24h - b.priceChangePercentage24h),
+            set(state => {
+                const updatedState = {
+                    allCoins: mergedCoins,
+                    currentPage: targetPage,
+                    hasMore: newCoins.length === pageSize,
+                    featured: calculateList((a, b) => b.marketCap - a.marketCap),
+                    topGainers: calculateList((a, b) => b.priceChangePercentage24h - a.priceChangePercentage24h),
+                    topLosers: calculateList((a, b) => a.priceChangePercentage24h - b.priceChangePercentage24h),
+                };
+
+                // ⚡️ Only update filteredCoins if there is NO search query active
+                if (!state.searchQuery.trim()) {
+                    return {
+                        ...updatedState,
+                        filteredCoins: mergedCoins,
+                    };
+                }
+                return updatedState;
             });
+
         } catch (error) {
             set({ error: error instanceof Error ? error.message : 'Failed to fetch coins' });
         } finally {
@@ -142,7 +153,7 @@ export const useMarketStore = create<MarketState>((set, get) => ({
         set({ loading: true, error: null });
 
         try {
-            const daysMap: Record<string, number | 'max'>  = { '1D': 1, '7D': 7, '30D': 30, '90D': 90, '1Y': 365, 'ALL': 'max' };
+            const daysMap: Record<string, number | 'max'> = { '1D': 1, '7D': 7, '30D': 30, '90D': 90, '1Y': 365, 'ALL': 'max' };
             const response = await fetch(
                 `https://coingeko.burjx.com/coin-ohlc?productId=${selectedCoinId}&days=${daysMap[selectedTimeframe]}`
             );
